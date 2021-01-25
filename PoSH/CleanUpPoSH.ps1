@@ -18,10 +18,10 @@ documentation, even if Microsoft has been advised of the possibility of such dam
 #If AzureRM or Az PoSH cmdlets stop working properly, use the following script to remove all modules and then re-install fresh.
 ForEach ($module in (Get-Module -ListAvailable AzureRM*).Name | Get-Unique) {
     Write-Host "Removing Module $module"
-    Uninstall-Module $module
+    Uninstall-Module $module -Force
  }
 
  ForEach ($module in (Get-Module -ListAvailable Az*).Name | Get-Unique) {
     Write-Host "Removing Module $module"
-    Uninstall-Module $module
+    Uninstall-Module $module -Force
  }
