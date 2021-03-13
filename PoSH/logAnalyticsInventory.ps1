@@ -8,4 +8,4 @@ ForEach($workspace in $workspaces){
     $obj | Add-Member -MemberType NoteProperty -Name sku -Value $workspace.properties.sku 
     $results += $obj
 }
-$results | Export-Csv C:\error.csv -NoTypeInformation
+$results | Export-Csv C:\loganalyticsresults.csv -NoTypeInformation
