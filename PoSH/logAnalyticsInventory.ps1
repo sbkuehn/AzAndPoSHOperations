@@ -12,6 +12,22 @@ Microsoft, its authors, or anyone else involved in the creation, production, or 
 damages whatsoever (including, without limitation, damages for loss of business profits, business interruption, loss of 
 business information, or other pecuniary loss) arising out of the use of or inability to use the sample scripts or 
 documentation, even if Microsoft has been advised of the possibility of such damages.
+.SYNOPSIS 
+  Creates an inventory of Log Analytics workspaces deployed across a number of Azure subscriptions.
+   
+.DESCRIPTION 
+  This script extracts all Log Analytics workspaces deployed across a number of subscriptions and stores them as a variable. 
+  Then the script loops through each subscription and extracts specific information about each Log Analytics workspace: name, resource group, location, sku, permissions model.
+  Afterward, the script creates a PS Object and sorts results on name.
+  Lastly, the script exports all data into a CSV file for use.
+ 
+.EXAMPLE 
+  
+ 
+.NOTES 
+   AUTHOR: Shannon Kuehn
+   LASTEDIT: 2021.03.14
+
 #>
 
 # Exploratory queries
