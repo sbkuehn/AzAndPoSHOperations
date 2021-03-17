@@ -13,7 +13,9 @@ damages whatsoever (including, without limitation, damages for loss of business 
 business information, or other pecuniary loss) arising out of the use of or inability to use the sample scripts or 
 documentation, even if Microsoft has been advised of the possibility of such damages.
 .SYNOPSIS 
-  Creates an inventory of Log Analytics workspaces deployed across a number of Azure subscriptions.
+  Creates an inventory of Log Analytics workspaces deployed across a number of Azure subscriptions. Requires the Az.ResourceGraph PowerShell module. This needs to be installed
+  separately (Install-Module Az.ResourceGraph -Scope CurrentUser). Additionally, the Az modules require PowerShell 5.1 or greater, so a PSCustomObject could also be used to 
+  return the results to the output stream. This allows for multiple ways to save or output the results.
    
 .DESCRIPTION 
   This script extracts all Log Analytics workspaces deployed across a number of subscriptions and stores them as a variable. 
@@ -64,3 +66,18 @@ ForEach($workspace in $workspaces){
     $results += $obj
 }
 $results | Sort name | Export-Csv C:\results.csv -NoTypeInformation
+
+# Since the report leans on the Az modules, those require PowerShell 5.1 or greater. A a PSCustomObject could also be used to return results to the output stream. 
+# This allows for multiple ways to save or output the results.
+
+$workspaces = Search-AzGraph -Query "where type =~ 'Microsoft.OperationalInsights/workspaces'"
+ForEach ($workspace in $workspaces) { 
+    [PSCustomObject]@{
+        Name          = $workspace.name 
+        Location      = $workspace.location 
+        ResourceGroup = $workspace.resourceGroup
+        Sku           = $workspace.properties.sku
+        Features      = $workspace.properties.features
+    }
+}
+Export-Csv C:\results1.csv -NoTypeInformation
