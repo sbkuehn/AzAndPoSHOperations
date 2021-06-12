@@ -1,0 +1,128 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logAnalyticsWorkspaceName": {
+      "type": "String",
+      "metadata": {
+        "description": "Log Analytics workspace name."
+      }
+    },
+    "automationAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure Automation Account name."
+      }
+    },
+    "sku": {
+      "type": "string",
+      "allowedValues": [
+        "pergb2018",
+        "Free",
+        "Standalone",
+        "PerNode",
+        "Standard",
+        "Premium"
+      ],
+      "defaultValue": "pergb2018",
+      "metadata": {
+        "description": "Pricing tier: PerGB2018 or legacy tiers (Free, Standalone, PerNode, Standard or Premium) which are not available to all customers."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "westus",
+      "allowedValues": [
+        "australiacentral",
+        "australiaeast",
+        "australiasoutheast",
+        "brazilsouth",
+        "canadacentral",
+        "centralindia",
+        "centralus",
+        "eastasia",
+        "eastus",
+        "eastus2",
+        "francecentral",
+        "japaneast",
+        "koreacentral",
+        "northcentralus",
+        "northeurope",
+        "southafricanorth",
+        "southcentralus",
+        "southeastasia",
+        "switzerlandnorth",
+        "switzerlandwest",
+        "uksouth",
+        "ukwest",
+        "westcentralus",
+        "westeurope",
+        "westus",
+        "westus2"
+      ],
+      "metadata": {
+        "description": "Location of the Log Analytics workspace and linked Automation Account. EastUS Log Analytics workspaces need to be linked to EastUS2 Automation Accounts and EastUS2 Log Analytics workspaces need to be linked to EastUS Automation Accounts."
+      }
+    },
+    "resourcePermissions": {
+      "type": "bool",
+      "metadata": {
+        "description": "true to use resource or workspace permissions. false to require workspace permissions."
+      }
+    },
+    "retentionInDays": {
+      "type": "int",
+      "defaultValue": 120,
+      "metadata": {
+        "description": "Number of days to retain data."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "microsoft.operationalinsights/workspaces",
+      "apiVersion": "2020-10-01",
+      "name": "[parameters('logAnalyticsWorkspaceName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": {
+          "name": "[parameters('sku')]"
+        },
+        "retentionInDays": "[parameters('retentionInDays')]",
+        "features": {
+          "searchVersion": 1,
+          "legacy": 0,
+          "enableLogAccessUsingOnlyResourcePermissions": "[parameters('resourcePermissions')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Automation/automationAccounts",
+      "apiVersion": "2020-01-13-preview",
+      "name": "[parameters('automationAccountName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[parameters('logAnalyticsWorkspaceName')]"
+      ],
+      "properties": {
+        "sku": {
+          "name": "Basic"
+        }
+      },
+      "resources": []
+    },
+    {
+      "type": "microsoft.operationalinsights/workspaces/linkedservices",
+      "apiVersion": "2020-08-01",
+      "name": "[concat(parameters('logAnalyticsWorkspaceName'), '/automation')]",
+      "dependsOn": [
+        "[resourceId('microsoft.operationalinsights/workspaces', parameters('logAnalyticsWorkspaceName'))]",
+        "[parameters('automationAccountName')]"
+      ],
+      "properties": {
+        "resourceId": "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+      }
+    }
+  ]
+}
