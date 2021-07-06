@@ -28,7 +28,7 @@ New-AzResourceGroup `
 New-AzResourceGroupDeployment `
     -Name $resDeplName `
     -ResourceGroupName $rgName `
-    -TemplateFile $templ `
+    -TemplateFile $tmpl `
     -TemplateParameterFile $params
 
 # Submit template as a job via PowerShell:
