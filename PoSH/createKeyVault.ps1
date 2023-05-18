@@ -27,9 +27,6 @@ New-AzResourceGroup -Name $resourceGroupName -Location $location
 New-AzKeyVault -VaultName $keyVaultName -ResourceGroupName $resourceGroupName -Location $location `
     -EnabledForDiskEncryption -EnabledForDeployment -EnabledForTemplateDeployment
 
-# Add the Administrator policies to the Key Vault
-$ObjectId = (Get-AzADUser -UserPrincipalName $keyVaultAdminUser).Id
-
 # Set access policy for Key Vault
 Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ResourceGroupName $resourceGroupName -UserPrincipalName $keyVaultAdminUser
 -PermissionsToKeys decrypt,encrypt,unwrapKey,wrapKey,verify,sign,get,list,update,create,import,delete,backup,restore,recover,purge `
