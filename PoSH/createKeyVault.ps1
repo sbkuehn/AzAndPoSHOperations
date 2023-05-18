@@ -28,7 +28,7 @@ New-AzKeyVault -VaultName $keyVaultName -ResourceGroupName $resourceGroupName -L
     -EnabledForDiskEncryption -EnabledForDeployment -EnabledForTemplateDeployment
 
 # Set access policy for Key Vault
-Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ResourceGroupName $resourceGroupName -UserPrincipalName $keyVaultAdminUser
+Set-AzKeyVaultAccessPolicy -VaultName $keyVaultName -ResourceGroupName $resourceGroupName -UserPrincipalName $keyVaultAdminUser `
 -PermissionsToKeys decrypt,encrypt,unwrapKey,wrapKey,verify,sign,get,list,update,create,import,delete,backup,restore,recover,purge `
 –PermissionsToSecrets get,list,set,delete,backup,restore,recover,purge `
 –PermissionsToCertificates get,list,delete,create,import,update,managecontacts,getissuers,listissuers,setissuers,deleteissuers,manageissuers,recover,purge,backup,restore `
