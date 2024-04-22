@@ -27,6 +27,7 @@ foreach ($subscription in $subscriptions) {
                 DiskManagedBy = $disk.ManagedBy
                 DiskSKU = $disk.Sku.Name
                 DiskSize = $disk.DiskSizeGB
+                DiskId = $disk.UniqueId
                 ResourceGroup = $disk.ResourceGroupName
                 SubscriptionName = $subscription.Name
                 SubscriptionId = $subscription.Id
