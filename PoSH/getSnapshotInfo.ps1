@@ -36,4 +36,4 @@ foreach ($subscription in $subscriptions) {
 $snapshotInfo | Export-Csv -Path $path -NoTypeInformation
 
 # Print a success message
-Write-Host "Snapshot information exported to snapshot_info.csv"
+Write-Host "CSV file with snapshot information has been created."
