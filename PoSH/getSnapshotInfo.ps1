@@ -1,3 +1,6 @@
+# Login to Azure
+Connect-AzAccount
+
 $path = "c:\Your\Path\Here\snapshotInfo.csv"
 
 # Initialize an empty array to store snapshot information
@@ -22,6 +25,7 @@ foreach ($subscription in $subscriptions) {
             SnapshotName = $snapshot.Name
             ResourceGroup = $snapshot.ResourceGroupName
             CreationDate = $snapshot.TimeCreated
+            SnapshotDiskId = $snapshot.CreationData.SourceResourceId
             SubscriptionName = $subscription.Name
             SubscriptionId = $subscription.Id
             
