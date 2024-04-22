@@ -9,26 +9,23 @@ $subscriptions = Get-AzSubscription
 # Loop through each subscription
 foreach ($subscription in $subscriptions) {
     # Select the subscription
-    Set-AzContext -Subscription $subscription.Id
+    Select-AzSubscription -SubscriptionId $subscription.Id
 
     # Get all snapshots in the subscription
     $snapshots = Get-AzSnapshot
 
-    # Extract relevant information from snapshots
+    # Loop through each snapshot
     foreach ($snapshot in $snapshots) {
-        $snapshotName = $snapshot.Name
-        $resourceGroup = $snapshot.ResourceGroupName
-        $creationDate = $snapshot.TimeCreated
 
-        # Create a custom object with snapshot information
-        $snapshotObject = New-Object PSObject -Property @{
-            SnapshotName = $snapshotName
-            ResourceGroup = $resourceGroup
-            CreationDate = $creationDate
+        # Add snapshot details to the array
+        $snapshotInfo += [PSCustomObject]@{
+            SnapshotName = $snapshot.Name
+            ResourceGroup = $snapshot.ResourceGroupName
+            CreationDate = $snapshot.TimeCreated
+            SubscriptionName = $subscription.Name
+            SubscriptionId = $subscription.Id
+            
         }
-
-        # Add the snapshot object to the array
-        $snapshotInfo += $snapshotObject
     }
 }
 
