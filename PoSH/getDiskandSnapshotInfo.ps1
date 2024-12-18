@@ -2,7 +2,7 @@
 Connect-AzAccount
 
 # Define the path for the CSV file
-$path = "C:\Path\To\Export\CSV\disk-and-snaps.csv"
+$path = Read-Host -Prompt "Please provide a file path."
 
 # Initialize an array to store combined VM, disk, and snapshot details
 $details = @()
@@ -70,4 +70,4 @@ foreach ($subscription in $subscriptions) {
 
 # Output combined details to CSV file
 $details | Export-Csv -Path $path -NoTypeInformation
-Write-Host "CSV file with combined VM, disk, and snapshot details has been created at $path."
+Write-Output "CSV file with combined VM, disk, and snapshot details has been created at $path."
