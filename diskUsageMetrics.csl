@@ -1,0 +1,10 @@
+InsightsMetrics
+| where Origin == "vm.azm.ms" and Namespace == "LogicalDisk" 
+| where Name in ("FreeSpaceMB", "FreeSpacePercentage")
+| extend Disk=tostring(todynamic(Tags)["vm.azm.ms/mountId"])
+| summarize arg_max(TimeGenerated, Val) by Computer, Name, Disk, _ResourceId
+| extend Packed = bag_pack(Name, Val) 
+| project TimeGenerated, Computer, Disk, _ResourceId, Packed
+| summarize Packed = make_bag(Packed) by TimeGenerated, Computer, Disk, _ResourceId
+| evaluate bag_unpack(Packed) : (TimeGenerated:datetime , Computer:string, Disk:string, _ResourceId:string, FreeSpaceMB:long, FreeSpacePercentage:decimal)
+| extend DiskSizeGB = ceiling((todecimal(FreeSpaceMB) / (FreeSpacePercentage / todecimal(100))) /1024)
