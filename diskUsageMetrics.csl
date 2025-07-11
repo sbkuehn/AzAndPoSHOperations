@@ -7,4 +7,6 @@ InsightsMetrics
 | project TimeGenerated, Computer, Disk, _ResourceId, Packed
 | summarize Packed = make_bag(Packed) by TimeGenerated, Computer, Disk, _ResourceId
 | evaluate bag_unpack(Packed) : (TimeGenerated:datetime , Computer:string, Disk:string, _ResourceId:string, FreeSpaceMB:long, FreeSpacePercentage:decimal)
-| extend DiskSizeGB = ceiling((todecimal(FreeSpaceMB) / (FreeSpacePercentage / todecimal(100))) /1024)
+| extend FreeSpaceGB = FreeSpaceMB / 1024
+| extend TotalSpaceGB = ceiling((todecimal(FreeSpaceMB) / (FreeSpacePercentage / todecimal(100))) / 1024)
+| extend UsedSpaceGB = TotalSpaceGB - FreeSpaceGB
