@@ -1,0 +1,5 @@
+union withsource = SourceWorkspace *
+| where TimeGenerated >= startofday(ago(30d)) // Adjust the time range as needed
+| where IsBillable == true // Only include billable data
+| summarize TotalDataIngestedGB = sum(Quantity) / 1024 by bin(TimeGenerated, 30d)
+| order by TimeGenerated asc
