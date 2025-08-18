@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     This script queries all Windows VMs from a chosen source (Active Directory or Azure),
-    collects all local disks, calculates total, free, and used space in GB,
+    collects usage on all local disks, calculates total, free, and used space in GB,
     and exports the results to a CSV file for reporting or analysis.
 
     It tests connectivity to each VM before querying and handles errors gracefully.
