@@ -1,0 +1,13 @@
+union 
+    workspace("workspace-id-1").InsightsMetrics,
+    workspace("workspace-id-2").InsightsMetrics,
+    workspace("workspace-id-3").InsightsMetrics
+| where Origin == "vm.azm.ms" and Namespace == "LogicalDisk"
+| where Name in ("FreeSpaceMB", "FreeSpacePercentage")
+| extend Disk=tostring(todynamic(Tags)["vm.azm.ms/mountId"])
+| summarize arg_max(TimeGenerated, Val) by Computer, Name, Disk, _ResourceId
+| extend Packed = bag_pack(Name, Val)
+| summarize Packed = make_bag(Packed) by TimeGenerated, Computer, Disk, _ResourceId
+| evaluate bag_unpack(Packed)
+| extend UsedSpaceGB = ceiling((todecimal(FreeSpaceMB) / (FreeSpacePercentage / todecimal(100)) - FreeSpaceMB) / 1024), FreeSpaceGB = FreeSpaceMB / 1024
+| project TimeGenerated, Computer, Disk, _ResourceId, UsedSpaceGB, FreeSpaceGB
