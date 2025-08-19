@@ -1,5 +1,3 @@
-Here’s the polished version:
-
 <#
 .SYNOPSIS
     Enables Boot Diagnostics for all Virtual Machines across all subscriptions in a single Azure tenant.
