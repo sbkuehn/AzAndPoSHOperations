@@ -1,0 +1,37 @@
+{
+  "properties": {
+    "displayName": "Audit VMs without boot diagnostics",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Audits all VMs that do not have boot diagnostics enabled.",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Compute"
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachines"
+          },
+          {
+            "anyOf": [
+              {
+                "field": "Microsoft.Compute/virtualMachines/diagnosticsProfile.bootDiagnostics.enabled",
+                "exists": "false"
+              },
+              {
+                "field": "Microsoft.Compute/virtualMachines/diagnosticsProfile.bootDiagnostics.enabled",
+                "equals": "false"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "Audit"
+      }
+    }
+  }
+}
