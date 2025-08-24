@@ -1,0 +1,7 @@
+{
+  "parameters": {
+    "storageAccountId": {
+      "value": "/subscriptions/<subId>/resourceGroups/<rgName>/providers/Microsoft.Storage/storageAccounts/<storageName>"
+    }
+  }
+}
