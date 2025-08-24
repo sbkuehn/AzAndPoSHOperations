@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "displayName": "Deploy Boot Diagnostics for VMs",
+    "policyType": "Custom",
+    "mode": "Indexed",
+    "description": "Automatically enables boot diagnostics for VMs that do not have it configured.",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Compute"
+    },
+    "parameters": {
+      "storageAccountId": {
+        "type": "String",
+        "metadata": {
+          "description": "Resource ID of the storage account where boot diagnostics will be stored",
+          "displayName": "Storage Account Resource ID"
+        }
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Compute/virtualMachines"
+          },
+          {
+            "anyOf": [
+              {
+                "field": "Microsoft.Compute/virtualMachines/diagnosticsProfile.bootDiagnostics.enabled",
+                "exists": "false"
+              },
+              {
+                "field": "Microsoft.Compute/virtualMachines/diagnosticsProfile.bootDiagnostics.enabled",
+                "equals": "false"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "deployIfNotExists",
+        "details": {
+          "type": "Microsoft.Compute/virtualMachines",
+          "roleDefinitionIds": [
+            "/providers/microsoft.authorization/roleDefinitions/contributor"
+          ],
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "resources": [
+                  {
+                    "type": "Microsoft.Compute/virtualMachines",
+                    "apiVersion": "2023-03-01",
+                    "name": "[field('name')]",
+                    "location": "[field('location')]",
+                    "properties": {
+                      "diagnosticsProfile": {
+                        "bootDiagnostics": {
+                          "enabled": true,
+                          "storageUri": "[reference(parameters('storageAccountId'), '2021-04-01').primaryEndpoints.blob]"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
