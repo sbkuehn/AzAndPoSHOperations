@@ -1,19 +1,15 @@
 {
   "properties": {
     "displayName": "Deploy Boot Diagnostics for VMs",
-    "policyType": "Custom",
-    "mode": "Indexed",
     "description": "Automatically enables boot diagnostics for VMs that do not have it configured.",
-    "metadata": {
-      "version": "1.0.0",
-      "category": "Compute"
-    },
+    "policyType": "Custom",
+    "mode": "All",
     "parameters": {
       "storageAccountId": {
         "type": "String",
         "metadata": {
-          "description": "Resource ID of the storage account where boot diagnostics will be stored",
-          "displayName": "Storage Account Resource ID"
+          "displayName": "Storage Account Resource ID",
+          "description": "Resource ID of the storage account where boot diagnostics will be stored"
         }
       }
     },
