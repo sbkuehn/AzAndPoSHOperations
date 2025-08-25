@@ -15,4 +15,6 @@ param (
     [string]$ResourceGroupName
 )
 
-Get-AzResource -ResourceGroupName $ResourceGroupName | Where-Object { $_.ResourceType -eq "Microsoft.OperationsManagement/solutions" }
+Get-AzResource -ResourceGroupName $ResourceGroupName | Where-Object { 
+    $_.ResourceType -eq "Microsoft.OperationsManagement/solutions" 
+}
