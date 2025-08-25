@@ -19,7 +19,7 @@ The name of the Log Analytics workspace where Sentinel is enabled.
 Author: Your Name
 Date:   2025-08-24
 #>
-
+[CmdletBinding()]
 param (
     [Parameter(Mandatory = $true)]
     [string]$ResourceGroupName,
