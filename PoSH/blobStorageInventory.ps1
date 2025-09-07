@@ -1,6 +1,50 @@
-# Requires Az.ResourceGraph, Az.Monitor, Az.Accounts modules
+<#
+.SYNOPSIS
+    Exports all Blob Storage accounts from Azure (via Resource Graph) 
+    and retrieves their used capacity in GB.
 
+.DESCRIPTION
+    This script queries Azure Resource Graph (ARG) to find all Blob-enabled 
+    storage accounts (StorageV2 and BlobStorage kinds). For each account, 
+    it retrieves the UsedCapacity metric from Azure Monitor to determine 
+    the amount of data stored (in GB). Results are displayed in the console 
+    and optionally exported to a CSV file.
+
+.PARAMETER ExportFile
+    The full file path where the CSV output should be saved. 
+    If not specified, the results are only displayed on screen.
+
+.EXAMPLE
+    .\Get-BlobStorageInventory.ps1
+    Queries all Blob Storage accounts in the current tenant, retrieves usage, 
+    and outputs results to the console in table format.
+
+.EXAMPLE
+    .\Get-BlobStorageInventory.ps1 -ExportFile "C:\Temp\blob_inventory.csv"
+    Queries all Blob Storage accounts, retrieves usage, and exports results 
+    to the specified CSV file.
+
+.OUTPUTS
+    PSCustomObject with the following properties:
+        SubscriptionId
+        ResourceGroup
+        Name
+        Location
+        SkuName
+        SkuTier
+        AccessTier
+        BlobEndpoint
+        UsedCapacityGB
+
+.NOTES
+    Author: Shannon Eldridge-Kuehn
+    Date:   2025-09-06
+    Requires: Az.ResourceGraph, Az.Monitor, Az.Accounts
+#>
+
+# Requires Az.ResourceGraph, Az.Monitor, Az.Accounts modules
 # Step 1: Query ARG for all Blob-capable storage accounts
+
 $storageAccounts = Search-AzGraph -Query @"
 Resources
 | where type == 'microsoft.storage/storageaccounts'
